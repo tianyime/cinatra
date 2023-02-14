@@ -1,4 +1,5 @@
 # cinatra--一个高效易用的c++ http框架
+111
 
 <p align="center">
   <a href="https://github.com/qicosmos/cinatra/tree/master/lang/english">English</a> | <span>中文</span>
@@ -48,7 +49,7 @@ cinatra是header-only的，直接引用头文件既可。
 
 	#include "cinatra.hpp"
 	using namespace cinatra;
-	
+
 	int main() {
 		int max_thread_num = std::thread::hardware_concurrency();
 		http_server server(max_thread_num);
@@ -67,7 +68,7 @@ cinatra是header-only的，直接引用头文件既可。
 
 	#include "cinatra.hpp"
 	using namespace cinatra;
-	
+
 	int main() {
 		http_server server(std::thread::hardware_concurrency());
 		server.listen("0.0.0.0", "8080");
@@ -77,13 +78,13 @@ cinatra是header-only的，直接引用头文件既可。
 				res.set_status_and_content(status_type::bad_request, "no name");
 				return;
 			}
-	
+
 			auto id = req.get_query_value("id");
 			if (id.empty()) {
 				res.set_status_and_content(status_type::bad_request);
 				return;
 			}
-	
+
 			res.set_status_and_content(status_type::ok, "hello world");
 		});
 
@@ -103,13 +104,13 @@ cinatra是header-only的，直接引用头文件既可。
 			std::cout << "before log" << std::endl;
 			return true;
 		}
-	
+
 		bool after(request& req, response& res) {
 			std::cout << "after log" << std::endl;
 			return true;
 		}
 	};
-	
+
 	//校验的切面
 	struct check {
 		bool before(request& req, response& res) {
@@ -120,7 +121,7 @@ cinatra是header-only的，直接引用头文件既可。
 			}
 			return true;
 		}
-	
+
 		bool after(request& req, response& res) {
 			std::cout << "after check" << std::endl;
 			return true;
@@ -160,7 +161,7 @@ cinatra目前支持了multipart和octet-stream格式的上传。
 	#include <atomic>
 	#include "cinatra.hpp"
 	using namespace cinatra;
-	
+
 	int main() {
 		http_server server(std::thread::hardware_concurrency());
 		server.listen("0.0.0.0", "8080");
@@ -168,12 +169,12 @@ cinatra目前支持了multipart和octet-stream格式的上传。
 		//http upload(multipart)
 		server.set_http_handler<GET, POST>("/upload_multipart", [](request& req, response& res) {
 			assert(req.get_content_type() == content_type::multipart);
-			
+
 			auto& files = req.get_upload_files();
 			for (auto& file : files) {
 				std::cout << file.get_file_path() << " " << file.get_file_size() << std::endl;
 			}
-	
+
 			res.set_status_and_content(status_type::ok, "multipart finished");
 		});
 
@@ -188,7 +189,7 @@ cinatra目前支持了multipart和octet-stream格式的上传。
 	#include <atomic>
 	#include "cinatra.hpp"
 	using namespace cinatra;
-	
+
 	int main() {
 		http_server server(std::thread::hardware_concurrency());
 		server.listen("0.0.0.0", "8080");
@@ -200,7 +201,7 @@ cinatra目前支持了multipart和octet-stream格式的上传。
 			for (auto& file : files) {
 				std::cout << file.get_file_path() << " " << file.get_file_size() << std::endl;
 			}
-	
+
 			res.set_status_and_content(status_type::ok, "octet-stream finished");
 		});
 
@@ -221,7 +222,7 @@ cinatra目前支持了multipart和octet-stream格式的上传。
 
 	#include "cinatra.hpp"
 	using namespace cinatra;
-	
+
 	int main() {
 		http_server server(std::thread::hardware_concurrency());
 		server.listen("0.0.0.0", "8080");
@@ -229,11 +230,11 @@ cinatra目前支持了multipart和octet-stream格式的上传。
 		//web socket
 		server.set_http_handler<GET, POST>("/ws", [](request& req, response& res) {
 			assert(req.get_content_type() == content_type::websocket);
-	
+
 			req.on(ws_open, [](request& req){
 				std::cout << "websocket start" << std::endl;
 			});
-	
+
 			req.on(ws_message, [](request& req) {
 				auto part_data = req.get_part_data();
 				//echo
@@ -263,7 +264,7 @@ cinatra目前支持了multipart和octet-stream格式的上传。
 		bool is_running = true;
 		http_server_<io_service_inplace> server;
 		server.listen("8080");
-	
+
 		server.set_http_handler<GET, POST>("/", [](request& req, response& res) {
 			res.set_status_and_content(status_type::ok, "hello world");
 		});
@@ -296,7 +297,7 @@ void test_sync_client() {
     std::string uri1 = "http://cn.bing.com";
     std::string uri2 = "https://www.baidu.com";
     std::string uri3 = "https://cn.bing.com";
-    
+
     response_data result = client->get(uri);
     print(result);
 
@@ -326,7 +327,7 @@ void test_sync_client() {
 
 ```
 void test_async_client() {
-    
+
     std::string uri = "http://www.baidu.com";
     std::string uri1 = "http://cn.bing.com";
     std::string uri2 = "https://www.baidu.com";
@@ -338,7 +339,7 @@ void test_async_client() {
             print(data);
         });
     }
-    
+
     {
         auto client = cinatra::client_factory::instance().new_client();
         client->async_get(uri1, [](response_data data) {
